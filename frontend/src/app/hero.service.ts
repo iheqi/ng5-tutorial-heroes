@@ -14,6 +14,7 @@ export class HeroService {
   private heroUrl = 'http://localhost:8080/hero/';
   private updateUrl = 'http://localhost:8080/update';
   private searchUrl = 'http://localhost:8080/search';
+  private addUrl = 'http://localhost:8080/insert';
 
   constructor(private http: HttpClient, private messageService: MessageService) { }
 
@@ -41,7 +42,6 @@ export class HeroService {
   }
   searchHeroes(term: string): Observable<HeroModel[]> {
     if (!term.trim()) {
-      // if not search term, return empty hero array.
       return of([]);
     }
     return this.http.get<HeroModel[]>(`${this.searchUrl}/?name=${term}`).pipe(
@@ -49,20 +49,26 @@ export class HeroService {
       catchError(this.handleError<HeroModel[]>('searchHeroes', []))
     );
   }
+  addHero(hero: HeroModel): Observable<HeroModel> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+    return this.http.post<HeroModel>(this.addUrl, hero, httpOptions)
+      .pipe(
+          // tap((hero: HeroModel) => this.log(`added hero w/ id=${hero.id}`)),
+          catchError(this.handleError<HeroModel>('addHero'))
+      );
+  }
 
   private log(message: string) {
     this.messageService.add('HeroService: ' + message);
   }
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
+      console.error(error);
 
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
       this.log(`${operation} failed: ${error.message}`);
 
-      // Let the app keep running by returning an empty result.
       return of(result as T);
     };
   }

@@ -22,4 +22,13 @@ export class HeroesComponent implements OnInit {
       this.heroes = heroes;
     });
   }
+  add(id, name: string) {
+    id = parseInt(id.trim(), 10);
+    name = name.trim();
+    if (!name || !id) { return; }
+    this.heroService.addHero({ id, name } as HeroModel)
+      .subscribe(() => {
+        this.heroes.push({ id, name });
+      });
+  }
 }

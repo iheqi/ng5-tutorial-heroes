@@ -1,10 +1,13 @@
 <h2>我的英雄</h2>
 <div>
+  <label>输入英雄ID:
+      <input type="number" #heroID/>
+  </label>
   <label>输入英雄名:
     <input #heroName/>
   </label>
   <!-- (click) passes input value to add() and then clears the input -->
-  <button (click)="add(heroName.value); heroName.value=''">
+  <button (click)="add(heroID.value,heroName.value); heroName.value=''; heroID.value=''">
     添加
   </button>
 </div>
