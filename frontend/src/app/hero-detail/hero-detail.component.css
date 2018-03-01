@@ -30,6 +30,9 @@ button:disabled {
     cursor: auto;
 }
 
+#delete:hover {
+    background-color: #ff0000;
+}
 .detail {
     padding: .4rem;
     margin: 0.6rem 0;

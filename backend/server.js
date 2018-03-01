@@ -108,4 +108,27 @@ app.post('/insert',function(req, res) {
     })
 })
 
+app.post('/delete',function(req, res) {
+    let hero = req.body;
+    
+    MongoClient.connect(dbURL,function(err, db) {
+        assert.equal(err,null);
+        
+        const tutorial = db.db('ng5-tutorial');
+        const heroes = tutorial.collection('heroes');
+
+        heroes.deleteOne({ "id": hero.id, "name": hero.name }, function(error, result) {
+            let rst = JSON.parse(result);
+
+            if (rst.n === 1) {
+                console.log("删除成功。");
+            } else {
+                console.log("删除失败,error：" + error);
+            }
+            res.end();
+            db.close();
+        })
+    })
+})
+
 app.listen(process.env.POST || 8080);

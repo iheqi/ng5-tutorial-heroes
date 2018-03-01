@@ -15,6 +15,7 @@ export class HeroService {
   private updateUrl = 'http://localhost:8080/update';
   private searchUrl = 'http://localhost:8080/search';
   private addUrl = 'http://localhost:8080/insert';
+  private deleteUrl = 'http://localhost:8080/delete';
 
   constructor(private http: HttpClient, private messageService: MessageService) { }
 
@@ -54,6 +55,16 @@ export class HeroService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
     return this.http.post<HeroModel>(this.addUrl, hero, httpOptions)
+      .pipe(
+          // tap((hero: HeroModel) => this.log(`added hero w/ id=${hero.id}`)),
+          catchError(this.handleError<HeroModel>('addHero'))
+      );
+  }
+  deleteHero(hero: HeroModel): Observable<HeroModel> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+    return this.http.post<HeroModel>(this.deleteUrl, hero, httpOptions)
       .pipe(
           // tap((hero: HeroModel) => this.log(`added hero w/ id=${hero.id}`)),
           catchError(this.handleError<HeroModel>('addHero'))
